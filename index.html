@@ -199,7 +199,7 @@ legend.append('rect')
 legend.append('text')                                     
     .attr('x', legendRectSize + legendSpacing)              
     .attr('y', legendRectSize - legendSpacing)              
-    .text(color.domain());          
+    .text((d, i) => color.domain()[i]);         
   
 });
 
