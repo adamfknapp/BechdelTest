@@ -1,9 +1,9 @@
+
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style> /* set the CSS */
 
 body { font: 12px Arial;}
-
 
 path { 
     stroke: steelblue;
@@ -41,8 +41,8 @@ path {
 <body>
 
 <!-- load the d3.js library -->    
-<script src="http://d3js.org/d3.v3.min.js"></script>
-
+//<script src="http://d3js.org/d3.v3.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.min.js"></script>
 <script>
 
 // Set the dimensions of the canvas / graph--------------
@@ -64,6 +64,7 @@ var xAxis = d3.svg.axis().scale(x)
 
 var yAxis = d3.svg.axis().scale(y)
     .orient("left").ticks(5);
+  
 
 
 // Define the line----------------------------------------
@@ -89,35 +90,6 @@ var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
   
-// Set up the legend----------------------------------------
-var legendRectSize = 18;                              
-var legendSpacing = 4;                                
-  
-var legend = svg.selectAll('.legend')                     
-  .data(color.domain())                                   
-  .enter()                                                
-  .append('g')                                            
-  .attr('class', 'legend')                                
-  .attr('transform', function(d, i) {                     
-    var height = legendRectSize + legendSpacing;          
-    var offset =  height * color.domain().length / 2;     
-    var horz = -2 * legendRectSize;                       
-    var vert = i * height - offset;                       
-    return 'translate(' + horz + ',' + vert + ')';        
-  });                                                    
-
-legend.append('rect')                                     
-    .attr('width', legendRectSize)                          
-    .attr('height', legendRectSize)                         
-    .style('fill', color)                                   
-    .style('stroke', color);                                
-
-legend.append('text')                                     
-    .attr('x', legendRectSize + legendSpacing)              
-    .attr('y', legendRectSize - legendSpacing)              
-    .text(function(d) { return d; });                       
-  
-  
 // Get the data---------------------------------------------
 d3.csv("film_data.csv", function(error, data) {
     data.forEach(function(d) {
@@ -135,7 +107,22 @@ d3.csv("film_data.csv", function(error, data) {
   	var r = 10 //set dot size
     var fillopac = 0.3 // make this an if statement so that movies that pass have a higher opacity
     var tipNumberFormat = d3.format(",")
-    
+    var color = d3.scale.ordinal()
+          .domain(["Pass", "Fail", "No Data"])
+          .range(["green", "red" , "black"]);
+  	
+  
+  //Check this out for details on Color legends
+  //
+  //http://blockbuilder.org/Q-Zhao/af60d8e831daf0976c41f643f27e9baf
+  
+  //Define the colors used in the legend---------
+  	const colorLegendG = d3.legendColor()
+    	.scale(color) //reference the previously defined color
+    	.shape('circle');
+  
+  
+  
     // Draw the dots------------------------
     svg.selectAll("dot")
         .data(data)
@@ -186,6 +173,34 @@ d3.csv("film_data.csv", function(error, data) {
         .attr("class", "y axis")
         .call(yAxis);
 
+// Set up the legend----------------------------------------
+var legendRectSize = 18;                              
+var legendSpacing = 4;                                
+  
+var legend = svg.selectAll('.legend')                     
+	.data(color.range())  
+  .enter()                                                
+  .append('g')                                            
+  .attr('class', 'legend')                                
+  .attr('transform', function(d, i) {                     
+    var height = legendRectSize + legendSpacing+5;          
+    var offset =  height * color.domain().length / 2;     
+    var horz = -2 * legendRectSize+99;                       
+    var vert = i * height - offset;                       
+    return 'translate(' + horz + ',' + vert + ')';        
+  });                                                    
+
+legend.append('rect')                                     
+    .attr('width', legendRectSize)                          
+    .attr('height', legendRectSize)                         
+    .style('fill', color)
+    .attr("fill-opacity", fillopac);                                
+
+legend.append('text')                                     
+    .attr('x', legendRectSize + legendSpacing)              
+    .attr('y', legendRectSize - legendSpacing)              
+    .text(color.domain());          
+  
 });
 
 </script>
