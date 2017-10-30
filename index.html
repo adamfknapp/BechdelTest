@@ -1,16 +1,13 @@
 
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <meta charset="utf-8">
 <style> /* set the CSS */
-
 body { font: 12px Arial;}
-
 path { 
     stroke: steelblue;
     stroke-width: 2;
     fill: none;
 }
-
 .axis path,
 .axis line {
     fill: none;
@@ -18,7 +15,6 @@ path {
     stroke-width: 1;
     shape-rendering: crispEdges;
 }  
-
 // Legend-------------
 .legend{font-family: 'Open Sans', sans-serif;
         font-size: 12pt;}
@@ -44,43 +40,36 @@ path {
 <script src="https://d3js.org/d3.v3.min.js"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.min.js"></script>
 <script>
-
 // Set the dimensions of the canvas / graph--------------
 var margin = {top: 80, right: 40, bottom: 30, left: 80},
     width = 900 - margin.left - margin.right,
     height = 470 - margin.top - margin.bottom;
+	
+  // Parse the date / time---------------------------------
+	// see https://github.com/d3/d3-time-format for details on parsing dates 
+	var parseDate = d3.time.format("%m/%e/%y").parse;
 
-// Parse the date / time---------------------------------
-// see https://github.com/d3/d3-time-format for details on parsing dates 
-var parseDate = d3.time.format("%m/%e/%y").parse;
+  // Set the ranges----------------------------------------
+	var x = d3.time.scale().range([0, width]);
+	var y = d3.scale.linear().range([height, 0]);
 
-// Set the ranges----------------------------------------
-var x = d3.time.scale().range([0, width]);
-var y = d3.scale.linear().range([height, 0]);
-
-// Define the axes----------------------------------------
-var xAxis = d3.svg.axis().scale(x)
+  // Define the axes----------------------------------------
+	var xAxis = d3.svg.axis().scale(x)
     .orient("bottom").ticks(5);
-
-var yAxis = d3.svg.axis().scale(y)
+	var yAxis = d3.svg.axis().scale(y)
     .orient("left").ticks(5);
   
-
-
 // Define the line----------------------------------------
 var valueline = d3.svg.line()
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.sold); });
     
 // Adds the svg canvas-----------------------------------
-var svg = d3.select("body")
-    .append("svg")
+var svg = d3.select("body").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-        .attr("transform", 
-              "translate(" + margin.left + "," + margin.top + ")");
-
+    		.append("g").attr("transform", "translate(" + margin.left + "," + 							margin.top + ")");
+  
 // setup fill color---------------------------------------
 var cValue = function(d) { return d.Bechdel_Test_Result;},
     color = d3.scale.category10(); 
@@ -97,11 +86,9 @@ d3.csv("film_data.csv", function(error, data) {
         d.sold = +d.Tickets_sold;
       	d.result = d.Bechdel_Test_Result;
     });
-
     // Scale the range of the data
     x.domain(d3.extent(data, function(d) { return d.date; }));
     y.domain([0, d3.max(data, function(d) { return d.sold; })]);
-
   
   	// Variables for the dots--------------
   	var r = 10 //set dot size
@@ -113,9 +100,6 @@ d3.csv("film_data.csv", function(error, data) {
   	
   
   //Check this out for details on Color legends
-  //
-  //http://blockbuilder.org/Q-Zhao/af60d8e831daf0976c41f643f27e9baf
-  
   //Define the colors used in the legend---------
   	const colorLegendG = d3.legendColor()
     	.scale(color) //reference the previously defined color
@@ -161,47 +145,43 @@ d3.csv("film_data.csv", function(error, data) {
                 .style("opacity", 0);	
         })
     ;
-
     // Add the X Axis
     svg.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
-
     // Add the Y Axis
     svg.append("g")
         .attr("class", "y axis")
         .call(yAxis);
-
 // Set up the legend----------------------------------------
-var legendRectSize = 18;                              
+var legendRectSize = 15;                              
 var legendSpacing = 4;                                
   
 var legend = svg.selectAll('.legend')                     
-	.data(color.range())  
+	.data(color.domain())  
   .enter()                                                
   .append('g')                                            
   .attr('class', 'legend')                                
   .attr('transform', function(d, i) {                     
     var height = legendRectSize + legendSpacing+5;          
     var offset =  height * color.domain().length / 2;     
-    var horz = -2 * legendRectSize+99;                       
+    var horz = width -2 * legendRectSize;                       
     var vert = i * height - offset;                       
     return 'translate(' + horz + ',' + vert + ')';        
   });                                                    
-
 legend.append('rect')                                     
     .attr('width', legendRectSize)                          
     .attr('height', legendRectSize)                         
     .style('fill', color)
     .attr("fill-opacity", fillopac);                                
-
 legend.append('text')                                     
     .attr('x', legendRectSize + legendSpacing)              
     .attr('y', legendRectSize - legendSpacing)              
-    .text((d, i) => color.domain()[i]);         
+		.text(function(d){return d;})    
+
+      
   
 });
-
 </script>
 </body>
