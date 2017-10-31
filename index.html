@@ -113,8 +113,12 @@ d3.csv("film_data.csv", function(error, data) {
     x.domain(d3.extent(data, function(d) { return d.date; }));
     y.domain([0, d3.max(data, function(d) { return d.sold; })]);
   
-  	// Variables for the dots--------------
-  	var r = 10 //set dot size
+
+//---------------------------------------------------------  
+// Variables for the dots----------------------------------
+//--------------------------------------------------------- 
+  
+  var r = 10 //set dot size
     var fillopac = 0.3 // make this an if statement so that movies that pass have a higher opacity
     var tipNumberFormat = d3.format(",")
     var color = d3.scale.ordinal()
@@ -167,6 +171,17 @@ d3.csv("film_data.csv", function(error, data) {
                 .style("opacity", 0);	
         })
     ;
+  
+
+  
+
+
+
+  
+//---------------------------------------------------------   
+//Axis-----------------------------------------------------
+//--------------------------------------------------------- 
+  
     // Add the X Axis
     g.append("g")
         .attr("class", "x axis")
@@ -177,7 +192,9 @@ d3.csv("film_data.csv", function(error, data) {
         .attr("class", "y axis")
         .call(yAxis);
   
+//---------------------------------------------------------  
 // Set up the legend---------------------------------------
+//---------------------------------------------------------
 var legendRectSize = 20;                              
 var legendSpacing = 5;                                
   
@@ -203,66 +220,7 @@ legend.append('text')
     .attr('y', legendRectSize - legendSpacing)              
 		.text(function(d){return d;})    
 
-// Create Interaction -------------------------------------
-	renderBars(baseLayer, layers);
-        
-	if(hoveredColorValue){
-          setOverlayTransparency(0.7);
-          renderBars(foregroundBarLayer, layers.filter(function (layer){
-            return layer.key === hoveredColorValue;
-          }));
-        } else {
-          setOverlayTransparency(0.0);
-          renderBars(foregroundBarLayer, []);
-        }
-
-  function renderBars(g, layers){
-        var layerGs = g.selectAll(".layer").data(layers);
-        layerGs.enter().append("g").attr("class", "layer");
-        layerGs.exit().remove();
-
-        layerGs.style("fill", function (d){
-          return colorScale(d.key);
-        });
-
-        var bars = layerGs.selectAll("rect").data(function (d){
-          return d.values;
-        });
-        bars.enter().append("rect")
-          .on("mouseover", function(d){
-            tip.show(d);
-          
-            // Fix the issue where the tip goes off the screen.
-            d3.select(".d3-tip").style("left", "100px");
-          })
-          .on("mouseout", tip.hide);
-        bars.exit().remove();
-        bars
-          .attr("x", function (d){ return xScale(d.y0); })
-          .attr("y", function (d){ return yScale(d[yColumn]); })
-          .attr("width", function (d){ return xScale(d.y); })
-          .attr("height", yScale.rangeBand());
-      }
-  
-      function setOverlayTransparency(alpha){
-        overlayRect
-          .transition().duration(400)
-          .attr("fill", "rgba(255, 255, 255, " + alpha + ")");
-      }
-
-
-function listenForHover(selection, data){
-        selection
-          .on("mouseover", function (d){
-            hoveredColorValue = d;
-            render(data);
-          })
-          .on("mouseout", function (d){
-            hoveredColorValue = null;
-            render(data);
-          })
-          .style("cursor", "pointer");
-      }     
+ 
   
 });
 </script>
