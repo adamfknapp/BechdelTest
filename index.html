@@ -40,6 +40,10 @@ path {
  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.min.js"></script>
 <script>
   
+//---------------------------------------------------------  
+// Set up & Define variables-------------------------------
+//--------------------------------------------------------- 
+  
 	// Set the dimensions of the canvas / graph--------------
 	var margin = {top: 80, right: 40, bottom: 30, left: 80},
    	 	width = 900 - margin.left - margin.right,
@@ -66,7 +70,6 @@ path {
     
 	
   // Adds the svg canvas-----------------------------------
-  //-------------------------------------------------------
 	var svg = d3.select("body").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -89,8 +92,7 @@ path {
        
   		// This contains the subset of dots rendered on top
       // when you hover over the entries in the color legend.
-      var foregroundLayer = g.append("g");
-  
+      var foregroundLayer = g.append("g"); 
   
 	// setup fill color---------------------------------------
 	var cValue = function(d) { return d.Bechdel_Test_Result;},
@@ -103,38 +105,79 @@ path {
   
   
 // Get the data---------------------------------------------
-d3.csv("film_data.csv", function(error, data) {
-    data.forEach(function(d) {
-        d.date = parseDate(d.Release_date);
-        d.sold = +d.Tickets_sold;
-      	d.result = d.Bechdel_Test_Result;
-    });
-    // Scale the range of the data
-    x.domain(d3.extent(data, function(d) { return d.date; }));
-    y.domain([0, d3.max(data, function(d) { return d.sold; })]);
-  
+    d3.csv("film_data.csv", function(error, data) {
+        data.forEach(function(d) {
+            d.date = parseDate(d.Release_date);
+            d.sold = +d.Tickets_sold;
+            d.result = d.Bechdel_Test_Result;
+        });
+        // Scale the range of the data
+        x.domain(d3.extent(data, function(d) { return d.date; }));
+        y.domain([0, d3.max(data, function(d) { return d.sold; })]);
 
+
+     // Define Colors & Fill------------------------------------ 
+      var color = d3.scale.ordinal()
+              .domain(["Pass", "Fail", "No Data"])
+              .range(["green", "red" , "black"]);  
+      var fillopac = 0.3 
+  
 //---------------------------------------------------------  
-// Variables for the dots----------------------------------
+// Set up the legend---------------------------------------
+//---------------------------------------------------------
+    var legendRectSize = 20;                              
+    var legendSpacing = 5;                                
+
+    var legend = g.selectAll('.legend')                     
+      .data(color.domain())  
+      .enter()                                                
+      .append('g')                                            
+      .attr('class', 'legend')                                
+      .attr('transform', function(d, i) {                     
+        var height = legendRectSize + legendSpacing+5;          
+        var offset =  height * color.domain().length / 2;     
+        var horz = width -2 * legendRectSize;                       
+        var vert = i * height - offset;                       
+        return 'translate(' + horz + ',' + vert + ')';        
+      });                                                    
+    legend.append('rect')                                     
+        .attr('width', legendRectSize)                          
+        .attr('height', legendRectSize)                         
+        .style('fill', color)
+        .attr("fill-opacity", fillopac);                                
+    legend.append('text')                                     
+        .attr('x', legendRectSize + legendSpacing)              
+        .attr('y', legendRectSize - legendSpacing)              
+        .text(function(d){return d;})   
+  
+  
+  
+//---------------------------------------------------------  
+// Draw the Dots ------------------------------------------
 //--------------------------------------------------------- 
   
-  var r = 10 //set dot size
-    var fillopac = 0.3 // make this an if statement so that movies that pass have a higher opacity
+  	var r = 10 //set dot size
+    //var layers = stack(nested.reverse()).reverse(); //line 141 from currans code
     var tipNumberFormat = d3.format(",")
-    var color = d3.scale.ordinal()
-          .domain(["Pass", "Fail", "No Data"])
-          .range(["green", "red" , "black"]);
+		
+    //Render the Base dataset
+   // renderdots(baseLayer, layers);
   	
-  
-  //Check this out for details on Color legends
-  //Define the colors used in the legend---------
-  	const colorLegendG = d3.legendColor()
-    	.scale(color) //reference the previously defined color
-    	.shape('circle');
-  
-  
+    //Determine transparency based on hover color
+    if(hoveredColorValue){
+          setOverlayTransparency(0.7);
+          renderdots(foregroundLayer, layers.filter(function (layer){
+            return layer.key === hoveredColorValue;
+          }));
+        } else {
+          setOverlayTransparency(0.0);
+          renderBars(foregroundLayer, []); //Reset transparecy
+        }  
+      
+      
     // Draw the dots------------------------
-    g.selectAll("dot")
+    function renderdots(g, layers){
+      g.selectAll("dot")
         .data(data)
       	.enter().append("circle")
     		.attr("fill-opacity", fillopac)
@@ -170,14 +213,22 @@ d3.csv("film_data.csv", function(error, data) {
                 .duration(500)		
                 .style("opacity", 0);	
         })
-    ;
-  
-
-  
-
-
-
-  
+    ;}
+ 
+   function listenForHover(selection, data){
+        selection
+          .on("mouseover", function (d){
+            hoveredColorValue = d;
+            render(data);
+          })
+          .on("mouseout", function (d){
+            hoveredColorValue = null;
+            render(data);
+          })
+          .style("cursor", "pointer");
+      }  
+      
+      
 //---------------------------------------------------------   
 //Axis-----------------------------------------------------
 //--------------------------------------------------------- 
@@ -191,34 +242,9 @@ d3.csv("film_data.csv", function(error, data) {
     g.append("g")
         .attr("class", "y axis")
         .call(yAxis);
-  
-//---------------------------------------------------------  
-// Set up the legend---------------------------------------
-//---------------------------------------------------------
-var legendRectSize = 20;                              
-var legendSpacing = 5;                                
-  
-var legend = g.selectAll('.legend')                     
-	.data(color.domain())  
-  .enter()                                                
-  .append('g')                                            
-  .attr('class', 'legend')                                
-  .attr('transform', function(d, i) {                     
-    var height = legendRectSize + legendSpacing+5;          
-    var offset =  height * color.domain().length / 2;     
-    var horz = width -2 * legendRectSize;                       
-    var vert = i * height - offset;                       
-    return 'translate(' + horz + ',' + vert + ')';        
-  });                                                    
-legend.append('rect')                                     
-    .attr('width', legendRectSize)                          
-    .attr('height', legendRectSize)                         
-    .style('fill', color)
-    .attr("fill-opacity", fillopac);                                
-legend.append('text')                                     
-    .attr('x', legendRectSize + legendSpacing)              
-    .attr('y', legendRectSize - legendSpacing)              
-		.text(function(d){return d;})    
+
+    
+
 
  
   
