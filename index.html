@@ -1,5 +1,4 @@
-
-<<!DOCTYPE html>
+<!DOCTYPE html>
 <meta charset="utf-8">
 <style> /* set the CSS */
 body { font: 12px Arial;}
@@ -40,10 +39,11 @@ path {
 <script src="https://d3js.org/d3.v3.min.js"></script>
  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.min.js"></script>
 <script>
-// Set the dimensions of the canvas / graph--------------
-var margin = {top: 80, right: 40, bottom: 30, left: 80},
-    width = 900 - margin.left - margin.right,
-    height = 470 - margin.top - margin.bottom;
+  
+	// Set the dimensions of the canvas / graph--------------
+	var margin = {top: 80, right: 40, bottom: 30, left: 80},
+   	 	width = 900 - margin.left - margin.right,
+    	height = 470 - margin.top - margin.bottom;
 	
   // Parse the date / time---------------------------------
 	// see https://github.com/d3/d3-time-format for details on parsing dates 
@@ -55,29 +55,52 @@ var margin = {top: 80, right: 40, bottom: 30, left: 80},
 
   // Define the axes----------------------------------------
 	var xAxis = d3.svg.axis().scale(x)
-    .orient("bottom").ticks(5);
+    	.orient("bottom").ticks(5);
 	var yAxis = d3.svg.axis().scale(y)
     .orient("left").ticks(5);
   
-// Define the line----------------------------------------
-var valueline = d3.svg.line()
+	// Define the line----------------------------------------
+	var valueline = d3.svg.line()
     .x(function(d) { return x(d.date); })
     .y(function(d) { return y(d.sold); });
     
-// Adds the svg canvas-----------------------------------
-var svg = d3.select("body").append("svg")
+	
+  // Adds the svg canvas-----------------------------------
+  //-------------------------------------------------------
+	var svg = d3.select("body").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-    		.append("g").attr("transform", "translate(" + margin.left + "," + 							margin.top + ")");
+   
+  		var g = svg.append("g").attr("transform", "translate(" 
+          + margin.left + "," + margin.top + ")");
   
-// setup fill color---------------------------------------
-var cValue = function(d) { return d.Bechdel_Test_Result;},
-    color = d3.scale.category10(); 
+  		//Based on http://blockbuilder.org/curran/0d2cc6698cad72a48027b8de0ebb417d
+  		//This is the layer where the cars are drawn
+  		var baseLayer = g.append("g");
+    
+  		// This layer contains a semi-transparent overlay
+  		// that fades out the base dots.
+      var overlayRect = g.append("g")
+        .append("rect")
+        .attr("width", innerWidth)
+        .attr("height", innerHeight)
+        .attr("fill", "none")
+        .style("pointer-events", "none");
+       
+  		// This contains the subset of dots rendered on top
+      // when you hover over the entries in the color legend.
+      var foregroundLayer = g.append("g");
   
-// add the tooltip area to the webpage--------------------
-var tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+  
+	// setup fill color---------------------------------------
+	var cValue = function(d) { return d.Bechdel_Test_Result;},
+    	color = d3.scale.category10(); 
+  
+	// add the tooltip area to the webpage--------------------
+	var tooltip = d3.select("body").append("div")
+    	.attr("class", "tooltip")
+    	.style("opacity", 0);
+  
   
 // Get the data---------------------------------------------
 d3.csv("film_data.csv", function(error, data) {
@@ -106,11 +129,10 @@ d3.csv("film_data.csv", function(error, data) {
     	.shape('circle');
   
   
-  
     // Draw the dots------------------------
-    svg.selectAll("dot")
+    g.selectAll("dot")
         .data(data)
-      .enter().append("circle")
+      	.enter().append("circle")
     		.attr("fill-opacity", fillopac)
         .attr("r", r)
         .attr("cx", function(d) { return x(d.date); })
@@ -146,19 +168,20 @@ d3.csv("film_data.csv", function(error, data) {
         })
     ;
     // Add the X Axis
-    svg.append("g")
+    g.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
     // Add the Y Axis
-    svg.append("g")
+    g.append("g")
         .attr("class", "y axis")
         .call(yAxis);
-// Set up the legend----------------------------------------
-var legendRectSize = 15;                              
-var legendSpacing = 4;                                
   
-var legend = svg.selectAll('.legend')                     
+// Set up the legend---------------------------------------
+var legendRectSize = 20;                              
+var legendSpacing = 5;                                
+  
+var legend = g.selectAll('.legend')                     
 	.data(color.domain())  
   .enter()                                                
   .append('g')                                            
@@ -180,7 +203,66 @@ legend.append('text')
     .attr('y', legendRectSize - legendSpacing)              
 		.text(function(d){return d;})    
 
-      
+// Create Interaction -------------------------------------
+	renderBars(baseLayer, layers);
+        
+	if(hoveredColorValue){
+          setOverlayTransparency(0.7);
+          renderBars(foregroundBarLayer, layers.filter(function (layer){
+            return layer.key === hoveredColorValue;
+          }));
+        } else {
+          setOverlayTransparency(0.0);
+          renderBars(foregroundBarLayer, []);
+        }
+
+  function renderBars(g, layers){
+        var layerGs = g.selectAll(".layer").data(layers);
+        layerGs.enter().append("g").attr("class", "layer");
+        layerGs.exit().remove();
+
+        layerGs.style("fill", function (d){
+          return colorScale(d.key);
+        });
+
+        var bars = layerGs.selectAll("rect").data(function (d){
+          return d.values;
+        });
+        bars.enter().append("rect")
+          .on("mouseover", function(d){
+            tip.show(d);
+          
+            // Fix the issue where the tip goes off the screen.
+            d3.select(".d3-tip").style("left", "100px");
+          })
+          .on("mouseout", tip.hide);
+        bars.exit().remove();
+        bars
+          .attr("x", function (d){ return xScale(d.y0); })
+          .attr("y", function (d){ return yScale(d[yColumn]); })
+          .attr("width", function (d){ return xScale(d.y); })
+          .attr("height", yScale.rangeBand());
+      }
+  
+      function setOverlayTransparency(alpha){
+        overlayRect
+          .transition().duration(400)
+          .attr("fill", "rgba(255, 255, 255, " + alpha + ")");
+      }
+
+
+function listenForHover(selection, data){
+        selection
+          .on("mouseover", function (d){
+            hoveredColorValue = d;
+            render(data);
+          })
+          .on("mouseout", function (d){
+            hoveredColorValue = null;
+            render(data);
+          })
+          .style("cursor", "pointer");
+      }     
   
 });
 </script>
