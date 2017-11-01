@@ -52,11 +52,9 @@ path {
   // Parse the date / time---------------------------------
 	// see https://github.com/d3/d3-time-format for details on parsing dates 
 	var parseDate = d3.time.format("%m/%e/%y").parse;
-
   // Set the ranges----------------------------------------
 	var x = d3.time.scale().range([0, width]);
 	var y = d3.scale.linear().range([height, 0]);
-
   // Define the axes----------------------------------------
 	var xAxis = d3.svg.axis().scale(x)
     	.orient("bottom").ticks(5);
@@ -114,8 +112,6 @@ path {
         // Scale the range of the data
         x.domain(d3.extent(data, function(d) { return d.date; }));
         y.domain([0, d3.max(data, function(d) { return d.sold; })]);
-
-
      // Define Colors & Fill------------------------------------ 
       var color = d3.scale.ordinal()
               .domain(["Pass", "Fail", "No Data"])
@@ -127,7 +123,6 @@ path {
 //---------------------------------------------------------
     var legendRectSize = 20;                              
     var legendSpacing = 5;                                
-
     var legend = g.selectAll('.legend')                     
       .data(color.domain())  
       .enter()                                                
@@ -144,7 +139,14 @@ path {
         .attr('width', legendRectSize)                          
         .attr('height', legendRectSize)                         
         .style('fill', color)
-        .attr("fill-opacity", fillopac);                                
+        .attr("fill-opacity", fillopac)
+    		.on("mouseover", function(d){
+      g.selectAll("circle").style("opacity", function(e){
+        return e.result === d ? 1 : 0.1
+      })
+    }).on("mouseout", function(){
+      g.selectAll("circle").style("opacity", 1)
+    });                                
     legend.append('text')                                     
         .attr('x', legendRectSize + legendSpacing)              
         .attr('y', legendRectSize - legendSpacing)              
@@ -161,22 +163,22 @@ path {
     var tipNumberFormat = d3.format(",")
 		
     //Render the Base dataset
-   // renderdots(baseLayer, layers);
+    renderdots();
   	
     //Determine transparency based on hover color
-    if(hoveredColorValue){
-          setOverlayTransparency(0.7);
-          renderdots(foregroundLayer, layers.filter(function (layer){
-            return layer.key === hoveredColorValue;
-          }));
-        } else {
-          setOverlayTransparency(0.0);
-          renderBars(foregroundLayer, []); //Reset transparecy
-        }  
+    //if(hoveredColorValue){
+    //      setOverlayTransparency(0.7);
+    //      renderdots(foregroundLayer, layers.filter(function (layer){
+    //        return layer.key === hoveredColorValue;
+    //      }));
+    //    } else {
+    //      setOverlayTransparency(0.0);
+    //      renderBars(foregroundLayer, []); //Reset transparecy
+    //    }  
       
       
     // Draw the dots------------------------
-    function renderdots(g, layers){
+    function renderdots(){
       g.selectAll("dot")
         .data(data)
       	.enter().append("circle")
@@ -242,10 +244,7 @@ path {
     g.append("g")
         .attr("class", "y axis")
         .call(yAxis);
-
     
-
-
  
   
 });
