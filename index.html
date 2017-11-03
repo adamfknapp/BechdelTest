@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<style> /* set the CSS */
 
+<head> 
+  <h1> Visualizaing Sexism in film</h1>
+
+  The Bechdel test asks a simple question: does a film have at least one scene where two women have a discussion about something other than a man? 
+
+  
+<style> /* set the CSS */
 circle { transition: opacity .4s; }	
 body { font: 12px Arial;}
 path { 
@@ -73,8 +79,10 @@ path {
 	var svg = d3.select("body").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-   
-  		var g = svg.append("g").attr("transform", "translate(" 
+  
+  
+ 
+  var g = svg.append("g").attr("id","two").attr("transform", "translate(" 
           + margin.left + "," + margin.top + ")");
   
   		//Based on http://blockbuilder.org/curran/0d2cc6698cad72a48027b8de0ebb417d
@@ -166,19 +174,7 @@ path {
 		
     //Render the Base dataset
     renderdots();
-  	
-    //Determine transparency based on hover color
-    //if(hoveredColorValue){
-    //      setOverlayTransparency(0.7);
-    //      renderdots(foregroundLayer, layers.filter(function (layer){
-    //        return layer.key === hoveredColorValue;
-    //      }));
-    //    } else {
-    //      setOverlayTransparency(0.0);
-    //      renderBars(foregroundLayer, []); //Reset transparecy
-    //    }  
-      
-      
+  	     
     // Draw the dots------------------------
     function renderdots(){
       g.selectAll("dot")
