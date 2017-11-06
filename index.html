@@ -53,26 +53,24 @@ path {
 //--------------------------------------------------------- 
   
 	// Set the dimensions of the canvas / graph--------------
-	var margin = {top: 80, right: 40, bottom: 30, left: 80},
+	var margin = {top: 10, right: 40, bottom: 30, left: 80},
    	 	width = 900 - margin.left - margin.right,
     	height = 470 - margin.top - margin.bottom;
-	
+
+  var LowerPanel = 100
+  var RightPanel = 100
+  
   // Parse the date / time---------------------------------
 	// see https://github.com/d3/d3-time-format for details on parsing dates 
 	var parseDate = d3.time.format("%m/%e/%y").parse;
-  // Set the ranges----------------------------------------
-	var x = d3.time.scale().range([0, width]);
-	var y = d3.scale.linear().range([height, 0]);
-  // Define the axes----------------------------------------
-	var xAxis = d3.svg.axis().scale(x)
-    	.orient("bottom").ticks(5);
-	var yAxis = d3.svg.axis().scale(y)
-    .orient("left").ticks(5);
   
-	// Define the line----------------------------------------
-	var valueline = d3.svg.line()
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.sold); });
+  // Set the ranges----------------------------------------
+	var x = d3.time.scale().range([0, width- RightPanel]);
+	var y = d3.scale.linear().range([height - LowerPanel , 0]);
+  
+  // Define the axes----------------------------------------
+	var xAxis = d3.svg.axis().scale(x).orient("bottom").ticks(5);
+	var yAxis = d3.svg.axis().scale(y).orient("left").ticks(5);
     
 	
   // Adds the svg canvas-----------------------------------
@@ -80,28 +78,12 @@ path {
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
   
-  
- 
   var g = svg.append("g").attr("id","two").attr("transform", "translate(" 
           + margin.left + "," + margin.top + ")");
   
-  		//Based on http://blockbuilder.org/curran/0d2cc6698cad72a48027b8de0ebb417d
-  		//This is the layer where the cars are drawn
-  		var baseLayer = g.append("g");
+  var baseLayer = g.append("g");
     
-  		// This layer contains a semi-transparent overlay
-  		// that fades out the base dots.
-      var overlayRect = g.append("g")
-        .append("rect")
-        .attr("width", innerWidth)
-        .attr("height", innerHeight)
-        .attr("fill", "none")
-        .style("pointer-events", "none");
-       
-  		// This contains the subset of dots rendered on top
-      // when you hover over the entries in the color legend.
-      var foregroundLayer = g.append("g"); 
-  
+     
 	// setup fill color---------------------------------------
 	var cValue = function(d) { return d.Bechdel_Test_Result;},
     	color = d3.scale.category10(); 
@@ -119,10 +101,12 @@ path {
             d.sold = +d.Tickets_sold;
             d.result = d.Bechdel_Test_Result;
         });
-        // Scale the range of the data
+      
+      // Scale the range of the data
         x.domain(d3.extent(data, function(d) { return d.date; }));
         y.domain([0, d3.max(data, function(d) { return d.sold; })]);
-     // Define Colors & Fill------------------------------------ 
+     
+      // Define Colors & Fill------------------------------------ 
       var color = d3.scale.ordinal()
               .domain(["Pass", "Fail", "No Data"])
               .range(["green", "red" , "black"]);  
@@ -142,7 +126,7 @@ path {
         var height = legendRectSize + legendSpacing+5;          
         var offset =  height * color.domain().length / 2;     
         var horz = width -2 * legendRectSize;                       
-        var vert = i * height - offset;                       
+        var vert = i * height - offset+50;                       
         return 'translate(' + horz + ',' + vert + ')';        
       });                                                    
     legend.append('rect')                                     
@@ -173,8 +157,8 @@ path {
     var tipNumberFormat = d3.format(",")
 		
     //Render the Base dataset
-    renderdots();
-  	     
+    renderdots();     
+      
     // Draw the dots------------------------
     function renderdots(){
       g.selectAll("dot")
@@ -233,18 +217,57 @@ path {
 //Axis-----------------------------------------------------
 //--------------------------------------------------------- 
   
-    // Add the X Axis
+    // Add the upper X Axis
     g.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
+        .attr("transform", "translate(0," + (height-LowerPanel) +")")
+        .call(xAxis);     
+    
+    // Add the lower X Axis
+    g.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + (height) +")")
+        .call(xAxis);   
+      
+      
     // Add the Y Axis
     g.append("g")
         .attr("class", "y axis")
         .call(yAxis);
     
- 
-  
+//---------------------------------------------------------
+      
+      
+//Lower Plot-----------------------------------------------
+      
+      
+//--------------------------------------------------------- 
+  const data2 = [
+    {year: 2000, passTickets: 193479416, WomenCong: 12.5, BetterMan: 58.4},
+    {year: 2001, passTickets: 327559803, WomenCong: 12.5, BetterMan: 59.4},
+    {year: 2002, passTickets: 206321547, WomenCong: 14.0, BetterMan: 60.3},
+    {year: 2003, passTickets: 265787633, WomenCong: 14.0, BetterMan: 61.4},
+    {year: 2004, passTickets: 352909556, WomenCong: 14.4, BetterMan: 62.4},
+    {year: 2005, passTickets: 194933155, WomenCong: 14.4, BetterMan: 63.2},
+    {year: 2006, passTickets: 173954006, WomenCong: 15.9, BetterMan: 64.0},
+    {year: 2007, passTickets: 293780669, WomenCong: 15.9, BetterMan: 63.9},
+    {year: 2008, passTickets: 150133991, WomenCong: 17.6, BetterMan: 63.7},
+    {year: 2009, passTickets: 197652980, WomenCong: 17.6, BetterMan: 64.0},
+    {year: 2010, passTickets: 383923854, WomenCong: 17.9, BetterMan: 64.2},
+    {year: 2011, passTickets: 324879834, WomenCong: 17.9, BetterMan: 65.9},
+    {year: 2012, passTickets: 270891996, WomenCong: 17.9, BetterMan: 67.6},
+    {year: 2013, passTickets: 378928356, WomenCong: 17.9, BetterMan: 68.0}
+    ];
+ 		
+  const year = d2 => d.year
+  const passTickets = d2 => 
+ //   var	valueline = d3.svg.line()
+ //     .x(function(d) { return x(d.date); })
+ //     .y(function(d) { return y(d.open); });  
+      
+    g.append("path").attr("class", "line")
+		.style("stroke", "red")
+		.attr("d", valueline(data2));
 });
 </script>
 </body>
