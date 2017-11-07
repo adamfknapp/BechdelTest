@@ -27,5 +27,5 @@ There are a number of areas where this work could be expanded in the future.
 
 1- Time lag: Films can take a year or more to produce, which could produce a meaningful gap between shifts in societal views and trends at the box office. Thus it would be interesting to normalize for this effect of this time lag however it may be difficult to collect reliable data on when a film was green lit to be made.
 
-2- Alternate measures: If the Bechdel test is not an accurate guage then what is? Hana Anderson and Matt Daniels of suggested an alternative based on an analysis of words spoken in a film There complete analysis is availible (here)[https://pudding.cool/2017/03/film-dialogue/]
+2- Alternate measures: If the Bechdel test is not an accurate guage then what is? Hana Anderson and Matt Daniels of suggested an alternative based on an analysis of words spoken in a film There complete analysis is availible [here](https://pudding.cool/2017/03/film-dialogue/)
 
