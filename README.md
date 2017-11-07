@@ -8,16 +8,16 @@ Many publications have used this test to suggest that films have become more inc
 
 Many analyses of the Bechdel Test analyses fail to account for selection bias and fail to normalize the data. This analysis does both and concludes that concludes that the Bechdel test is not an accurate gauge of societies views on gender
 
-**Data** 
+##Data
 Film data was compiled from BoxOfficeMojo.com for the top 25 grossing films between 2000 and 2013. For each of these films (1) the gross was normalized to tickets sold based on the inflation rate of film tickets from (http://www.boxofficemojo.com/about/adjuster.htm) (2) Results of the Bechdel test were recorded from https://bechdeltest.com/ and (3) the directors and executive producers were compiled from http://www.imdb.com/ 
 
 Societal views on Women were compiled from the General Societal Survey, which is availible at http://gss.norc.org/, and from the the percentage of women in the US Congress as taken from Wikipedia. 
 
-**The Visualization**
+##The Visualization
 
-**Technical Challenges**
+##Technical Challenges
 
 
-**Future Work**
+##Future Work
 
 
