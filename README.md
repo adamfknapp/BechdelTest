@@ -4,7 +4,7 @@ Is the Bechdel test is an accurate predictor of sexism in film?
 
 ## Abstract: 
 The Bechdel test asks a simple question: does a film have at least one scene where two women have a discussion about something other than a man? This question was originaly posed in a compic strip in 1985. Since then, it has come to be seen as an measure of sexism in film. 
-Many publications have used this test to suggest that films have become more inclusive over time. For example, 1843 Magazine- which is published by The Economists- published an article in November 2017 showing an upward trend in films that pass the beckdel test https://www.1843magazine.com/data-graphic/what-the-numbers-say/men-women-and-films . FiveTHirtyEight.com published a similar finding in January 2018 https://fivethirtyeight.com/features/the-casting-of-the-ghostbusters-reboot-is-a-brilliant-financial-move/. 
+Many publications have used this test to suggest that films have become more inclusive over time. For example, 1843 Magazine- which is published by The Economists- published an [article](https://www.1843magazine.com/data-graphic/what-the-numbers-say/men-women-and-films) in November 2017 showing an upward trend in films that pass the beckdel test . FiveTHirtyEight.com published a similar finding in a January 2018 [article](https://fivethirtyeight.com/features/the-casting-of-the-ghostbusters-reboot-is-a-brilliant-financial-move/).
 
 Many analyses of the Bechdel Test analyses fail to account for selection bias and fail to normalize the data. This analysis does both and concludes that concludes that the Bechdel test is **not an accurate gauge of societies views on gender**.
 
