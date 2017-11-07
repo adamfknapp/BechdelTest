@@ -13,9 +13,13 @@ Film data was compiled from BoxOfficeMojo.com for the top 25 grossing films betw
 Societal views on Women were compiled from the General Societal Survey, which is availible at http://gss.norc.org/, and from the the percentage of women in the US Congress as taken from Wikipedia. 
 
 ## The Visualization & Interactions
+This visualization proved challenging as it was my first exposure to Javascript and to D3.
 
+###### ToolTips
 
-#ToolTips
+###### Hover over legend
+
+###### Secondary plot
 
 ## Technical Challenges
 
