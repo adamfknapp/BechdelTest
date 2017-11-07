@@ -1,4 +1,4 @@
-## Testing the Bechdel Test
+# Testing the Bechdel Test
 
 ## Abstract: 
 
