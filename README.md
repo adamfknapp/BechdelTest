@@ -12,12 +12,17 @@ Film data was compiled from BoxOfficeMojo.com for the top 25 grossing films betw
 
 Societal views on Women were compiled from the General Societal Survey, which is availible at http://gss.norc.org/, and from the the percentage of women in the US Congress as taken from Wikipedia. 
 
+## Methodology
+
 ## The Visualization
 
 ## Technical Challenges
 
 ## Conclusions
+The data clearly show an increasingly liberal view of gender roles in society without a meaningful change in the popularity of films that pass the bechdel test. Of course there may be more films that pass the Bechdel test however these films are not topping the box office.
 
 ## Future Work
+Time lag
 
+Alternate measures
 
