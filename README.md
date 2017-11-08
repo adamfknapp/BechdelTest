@@ -20,7 +20,7 @@ Societal views on Women were compiled from the [General Societal Survey](http://
 This visualization proved challenging as it was my first exposure to Javascript and to D3.
 
 ![Image]
-(https://github.com/adamfknapp/BechdelTest/BechdelTest/Screen Shot.png)
+(https://github.com/adamfknapp/BechdelTest/BechdelTest/Screen_Shot.png)
 
 
 ###### ToolTips
