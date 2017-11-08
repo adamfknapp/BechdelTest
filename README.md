@@ -17,13 +17,37 @@ Film data was compiled from BoxOfficeMojo.com for the top 25 grossing films betw
 Societal views on Women were compiled from the [General Societal Survey](http://gss.norc.org/) and from the the percentage of women in the US Congress as taken from Wikipedia. 
 
 ## The Visualization & Interactions
-This visualization proved challenging as it was my first exposure to Javascript and to D3.
+This visualization proved challenging as it was my first exposure to Javascript and to D3. However, the final visualization answered the core question. 
 
-![Image]
-(https://bl.ocks.org/adamfknapp/raw/c5cd902b20ea87b35e420f26f016e8f5/f037b649b959394098bdc253fea4b2b3ebd068bd/)
+###### Visulaization
+The primary visualization is a scatter plot showing the ticket sales of each film over time. The markers in this plot are colored based on their performance against the Bechdel test. This visualization is supported with the multiple interactions:
 
+###### Tool Tip
+A simple tool tip was added to allow users to hover over any single marker and display the movie, its results against the test, and other supporting information. This tool tip was added 
 
-###### ToolTips
+'''javascript
+.on("mouseover", function(d) {
+           d3.select(this)
+             .attr("r",r*1.5)
+             .attr("fill-opacity", fillopac*3); // Change size of marker
+           
+      		tooltip.transition()
+               .duration(100)
+          		  .style("opacity", .9);
+          tooltip.html(d["Title"]
+                       + "<br/>" + d["Bechdel_Test_Result"]
+                       + "<br/> Released: " + d["Release_date"]
+                       + "<br/> Tickets sold: "+ 	tipNumberFormat(d["Tickets_sold"])  												)
+               .style("left", (d3.event.pageX + 15) + "px")
+               .style("top", (d3.event.pageY - 10) + "px");
+         	})
+     .on("mouseout", function(d) {		
+          d3.select(this).attr("r",r).attr("fill-opacity", fillopac); 
+      		tooltip.transition()		
+                .duration(500)		
+                .style("opacity", 0);	
+        })
+'''
 
 ###### Hover over legend
 
