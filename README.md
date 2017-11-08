@@ -1,6 +1,6 @@
 # Testing the Bechdel Test
 
-## Abstract: 
+## Abstract 
 
 This visulaization attempts to answer a single question: is the Bechdel test is an accurate guage of societies views on gender? The Bechdel test asks if a film has at least one scene where two women have a discussion about something other than a man? This question was originaly posed in a compic strip in 1985. Since then, it has come to be seen as an measure of sexism in film. 
 Many publications have used this test to suggest that films have become more inclusive over time. For example, 1843 Magazine- which is published by The Economists- published an [article](https://www.1843magazine.com/data-graphic/what-the-numbers-say/men-women-and-films) in November 2017 showing an upward trend in films that pass the Bechdel test . FiveTHirtyEight.com published a similar finding in a January 2015 [article](https://fivethirtyeight.com/features/the-casting-of-the-ghostbusters-reboot-is-a-brilliant-financial-move/).
