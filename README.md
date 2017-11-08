@@ -23,9 +23,9 @@ This visualization proved challenging as it was my first exposure to Javascript 
 The primary visualization is a scatter plot showing the ticket sales of each film over time. The markers in this plot are colored based on their performance against the Bechdel test. This visualization is supported with the multiple interactions:
 
 ###### Tool Tip
-A simple tool tip was added to allow users to hover over any single marker and display the movie, its results against the test, and other supporting information. This tool tip was added 
+A simple tool tip was added to allow users to hover over any single marker and display the movie, its results against the test, and other supporting information. This tool tip was added with the following code.
 
-'''javascript
+```javascript
 .on("mouseover", function(d) {
            d3.select(this)
              .attr("r",r*1.5)
@@ -46,14 +46,27 @@ A simple tool tip was added to allow users to hover over any single marker and d
       		tooltip.transition()		
                 .duration(500)		
                 .style("opacity", 0);	
-        });
-'''
-
+        }); 
+ ```       
 ###### Hover over legend
+A legend was also added to the visualization and an interaction was included that allows the user to however over the legend to highlight specific. This visualization was key as it clearly shows the trend over time. This effect was accomplished with an if statment in the legend. Multiple methods were attempted to achive this technique, [Gerardo Furtado](https://stackoverflow.com/questions/47044280/listen-for-hover-in-legend/47047742#47047742) showed that this method is simple and effective for small datasets. 
 
-###### Secondary plot
+ ```  
+    legend.append('rect')                                     
+        .attr('width', legendRectSize)                          
+        .attr('height', legendRectSize)                         
+        .style('fill', color)
+        .attr("fill-opacity", fillopac)
+    		.on("mouseover", function(d){
+      g.selectAll("circle").style("opacity", function(e){
+        return e.result === d ? 1 : 0.1
+      })
+    }).on("mouseout", function(){
+      g.selectAll("circle").style("opacity", 1)
+    });      
+ 
+  ```  
 
-## Technical Challenges
 
 ## Conclusions
 The data clearly show an increasingly liberal view of gender roles in society without a meaningful change in the popularity of films that pass the Bechdel test. Of course there may be more films that pass the Bechdel test however these films are not topping the box office.
