@@ -37,7 +37,7 @@ A simple tool tip was added to allow users to hover over any single marker and d
           tooltip.html(d["Title"]
                        + "<br/>" + d["Bechdel_Test_Result"]
                        + "<br/> Released: " + d["Release_date"]
-                       + "<br/> Tickets sold: "+ 	tipNumberFormat(d["Tickets_sold"])  												)
+                       + "<br/> Tickets sold: "+ 	tipNumberFormat(d["Tickets_sold"]))
                .style("left", (d3.event.pageX + 15) + "px")
                .style("top", (d3.event.pageY - 10) + "px");
          	})
@@ -46,7 +46,7 @@ A simple tool tip was added to allow users to hover over any single marker and d
       		tooltip.transition()		
                 .duration(500)		
                 .style("opacity", 0);	
-        })
+        });
 '''
 
 ###### Hover over legend
