@@ -2,9 +2,9 @@
 <meta charset="utf-8">
 
 <head> 
-  <h1> Visualizaing Sexism in film</h1>
+  <h1> The Bechdel Test</h1>
 
-  The Bechdel test asks a simple question: does a film have at least one scene where two women have a discussion about something other than a man? 
+  The Bechdel test asks a simple question: does a film have at least one scene where two women have a discussion about something other than a man? This visualization shows trends in the Bechdel Test over time along with the performance of specific films.  
 
   
 <style> /* set the CSS */
@@ -53,9 +53,9 @@ path {
 //--------------------------------------------------------- 
   
 	// Set the dimensions of the canvas / graph--------------
-	var margin = {top: 10, right: 40, bottom: 30, left: 120},
+	var margin = {top: 30, right: 40, bottom: 30, left: 120},
    	 	width = 900 - margin.left - margin.right,
-    	height = 470 - margin.top - margin.bottom;
+    	height = 450 - margin.top - margin.bottom;
 
   var LowerPanel = 100
   var RightPanel = 100
@@ -231,12 +231,7 @@ path {
         .attr("transform", "translate(0," + (height-LowerPanel) +")")
         .call(xAxis)
     		;     
-    
-    // Add the lower X Axis
-    g.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + (height) +")")
-        .call(xAxis);   
+
       
       
     // Add the Y Axis
@@ -257,12 +252,14 @@ path {
 //Lower Plot-----------------------------------------------
 //--------------------------------------------------------- 
 
-var PassRate = [10, 10,50, 25, 75, 80];
+var PassRate = [34,49,28,40,48,32,28,40,32,23,60,52,44,56];
+var SocialData = [59,60,61,62,63,64,64,63,64,64,66,67,68,68];
       
 //Based on Scott Murray's tutorial at http://alignedleft.com/tutorials/d3/making-a-bar-chart
 
-var w = 300;
-var h = 10;
+var w = 775;
+var xstart = 135
+var h = 100;
 var barpad = 1
 var xSpace = 20
 
@@ -279,18 +276,38 @@ svg.selectAll("rect")
   	.data(PassRate)
   	.enter()
   	.append("rect")
+  	.attr("fill", "green")
+     .style("fill-opacity",0.4)
   	.attr("x", function(d,i){
-  			return i *(w/PassRate.length- barpad); // Space out the bars
+  			return xstart+(i *((w-xstart)/PassRate.length)); // Space out the bars
 				})
   	.attr("y", function(d){
   			return h-d;//Intert the chart
 				})
-   	.attr("width", 20)
+   	.attr("width", (w-xstart)/(PassRate.length+ barpad))
     .attr("height", function(d){
   			return d; // Get heights of the bars
 				});
-   
-   
+
+//Bar chart labels
+svg.selectAll("text")
+   .data(PassRate)
+   .enter()
+   .append("text")
+
+	 .text(function(d){
+  				return d;
+					})
+  	.attr("x", function(d,i){
+  			return xstart+(i *((w-xstart)/PassRate.length)+14); // Space out the bars
+				})
+  	.attr("y", function(d){
+  			return h-d-4;//Invert the chart
+				})	
+    .attr("font-family", "sans-serif")
+    .attr("font-size", "12px")
+    .attr("fill", "grey")
+      
 
  });
 </script>
